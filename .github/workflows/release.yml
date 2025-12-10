@@ -9,36 +9,20 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  build_and_release:
     runs-on: ubuntu-latest
-    container: texlive/texlive:latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
+
+      - name: Install TeX Live
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive-xetex texlive-fonts-recommended texlive-plain-generic
 
       - name: Compile Resume
         run: |
-          make Harshal_Resume_RPT.pdf Harshal_Resume_India.pdf
-
-      - name: Upload PDF artifact
-        uses: actions/upload-artifact@v5
-        with:
-          name: resume-pdfs
-          path: |
-            examples/Harshal_Resume_RPT.pdf
-            examples/Harshal_Resume_India.pdf
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repo
-        uses: actions/checkout@v6
-
-      - name: Download PDF artifacts
-        uses: actions/download-artifact@v5
-        with:
-          name: resume-pdfs
+          make -j2 Harshal_Resume_RPT.pdf Harshal_Resume_India.pdf
 
       - name: Generate Release Tag
         id: tag
@@ -52,7 +36,7 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            Harshal_Resume_RPT.pdf
-            Harshal_Resume_India.pdf
+            examples/Harshal_Resume_RPT.pdf
+            examples/Harshal_Resume_India.pdf
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
