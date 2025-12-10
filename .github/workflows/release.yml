@@ -1,0 +1,58 @@
+name: Build and Release Resume
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: texlive/texlive:latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Compile Resume
+        run: |
+          make Harshal_Resume_RPT.pdf Harshal_Resume_India.pdf
+
+      - name: Upload PDF artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: resume-pdfs
+          path: |
+            examples/Harshal_Resume_RPT.pdf
+            examples/Harshal_Resume_India.pdf
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Download PDF artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: resume-pdfs
+
+      - name: Generate Release Tag
+        id: tag
+        run: echo "release_tag=$(date +'%Y.%m.%d-%H%M%S')" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.tag.outputs.release_tag }}
+          name: Release ${{ steps.tag.outputs.release_tag }}
+          draft: false
+          prerelease: false
+          files: |
+            Harshal_Resume_RPT.pdf
+            Harshal_Resume_India.pdf
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

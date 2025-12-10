@@ -18,5 +18,11 @@ cv.pdf: $(EXAMPLES_DIR)/cv.tex $(CV_SRCS)
 coverletter.pdf: $(EXAMPLES_DIR)/coverletter.tex
 	$(CC) -output-directory=$(EXAMPLES_DIR) $<
 
+Harshal_Resume_RPT.pdf: $(EXAMPLES_DIR)/resume.tex $(RESUME_SRCS)
+	$(CC) -output-directory=$(EXAMPLES_DIR) -jobname=Harshal_Resume_RPT $<
+
+Harshal_Resume_India.pdf: $(EXAMPLES_DIR)/resume_india.tex $(RESUME_SRCS)
+	$(CC) -output-directory=$(EXAMPLES_DIR) -jobname=Harshal_Resume_India $<
+
 clean:
 	rm -rf $(EXAMPLES_DIR)/*.pdf
