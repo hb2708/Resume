@@ -14,14 +14,14 @@ jobs:
     container: texlive/texlive:latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Compile Resume
         run: |
           make Harshal_Resume_RPT.pdf Harshal_Resume_India.pdf
 
-      - name: Upload PDF artifacts
-        uses: actions/upload-artifact@v4
+      - name: Upload PDF artifact
+        uses: actions/upload-artifact@v5
         with:
           name: resume-pdfs
           path: |
@@ -33,10 +33,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download PDF artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: resume-pdfs
 
