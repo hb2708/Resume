@@ -11,14 +11,10 @@ permissions:
 jobs:
   build_and_release:
     runs-on: ubuntu-latest
+    container: texlive/texlive:latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v6
-
-      - name: Install TeX Live
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y texlive-xetex texlive-fonts-recommended texlive-plain-generic
 
       - name: Compile Resume
         run: |
